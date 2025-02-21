@@ -3,7 +3,13 @@
     <h2 class="text-2xl font-bold text-center">Lista delle attività</h2>
     <ToDoForm @addtask="addNewTask" />
     <ul>
-      <ToDoItem v-for="todo in todos" :key="todo.id" :todo="todo" @delete-task="deleteTask" />
+      <ToDoItem
+        v-for="todo in todos"
+        :key="todo.id"
+        :todo="todo"
+        @delete-task="deleteTask"
+        @edit-task="editTask"
+      />
     </ul>
   </div>
 </template>
@@ -26,5 +32,10 @@ const addNewTask = (text: string) => {
 
 const deleteTask = (id: number) => {
   return (todos.value = todos.value.filter((todo) => todo.id !== id))
+}
+
+const editTask = (id: number, newText: string) => {
+  const index = todos.value.findIndex((todo) => todo.id === id)
+  return (todos.value[index].text = newText)
 }
 </script>
