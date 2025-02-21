@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-bold text-center">Lista delle attività</h2>
     <ToDoForm @addtask="addNewTask" />
     <ul>
-      <ToDoItem v-for="todo in todos" :key="todo.id" :todo="todo" />
+      <ToDoItem v-for="todo in todos" :key="todo.id" :todo="todo" @delete-task="deleteTask" />
     </ul>
   </div>
 </template>
@@ -22,5 +22,9 @@ const todos = ref<ToDo[]>([
 
 const addNewTask = (text: string) => {
   todos.value.push({ id: Date.now(), text, done: false })
+}
+
+const deleteTask = (id: number) => {
+  return (todos.value = todos.value.filter((todo) => todo.id !== id))
 }
 </script>

@@ -3,12 +3,16 @@
     <span>
       {{ todo.text }}
     </span>
-    <button class="text-red-500 hover:text-red-700">❌</button>
+    <button class="text-red-500 hover:text-red-700" @click="emit('delete-task', todo.id)">
+      ❌
+    </button>
   </li>
 </template>
 
 <script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
 import type { ToDo } from '@/types'
 
 const props = defineProps<{ todo: ToDo }>()
+const emit = defineEmits<{ (event: 'delete-task', id: number): void }>()
 </script>
