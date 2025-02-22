@@ -9,6 +9,7 @@
         :todo="todo"
         @delete-task="deleteTask"
         @edit-task="editTask"
+        @done-task="doneTask"
       />
     </ul>
   </div>
@@ -37,5 +38,12 @@ const deleteTask = (id: number) => {
 const editTask = (id: number, newText: string) => {
   const index = todos.value.findIndex((todo) => todo.id === id)
   return (todos.value[index].text = newText)
+}
+
+const doneTask = (id: number) => {
+  const todo = todos.value.find((todo) => todo.id === id)
+  if (todo) {
+    todo.done = !todo.done
+  }
 }
 </script>

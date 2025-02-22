@@ -20,7 +20,7 @@
 import { ref, defineEmits } from 'vue'
 
 const task = ref<string>('')
-const emit = defineEmits<{ (event: 'addtask', task: string): void }>()
+
 const addNewTask = () => {
   if (task.value.trim() !== '') {
     emit('addtask', task.value)
@@ -33,4 +33,6 @@ const handleEnter = (event: KeyboardEvent) => {
     addNewTask()
   }
 }
+
+const emit = defineEmits<{ (event: 'addtask', task: string): void }>()
 </script>
