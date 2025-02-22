@@ -1,10 +1,13 @@
 <template>
-  <div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
+  <div class="max-w-lg mx-auto mt-5 p-4 bg-white shadow-md rounded-lg">
     <h2 class="text-2xl font-bold text-center">Lista delle attività</h2>
     <ToDoForm @addtask="addNewTask" />
+    <div class="flex justify-between mb-4 mt-4">
+      <ToDoButton :filter-task="filter" @update-filter-task="updateFilterTask" />
+    </div>
     <ul>
       <ToDoItem
-        v-for="todo in todos"
+        v-for="todo in filteredTaskList"
         :key="todo.id"
         :todo="todo"
         @delete-task="deleteTask"
@@ -16,16 +19,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { ToDo } from '@/types'
+import { ref, computed, watch } from 'vue'
+import type { ToDo, FilterKey } from '@/types'
 import ToDoItem from '@/components/ToDoItem.vue'
 import ToDoForm from './ToDoForm.vue'
+import ToDoButton from '@/components/ToDoButton.vue'
 
-const todos = ref<ToDo[]>([
-  { id: 1, text: 'Learn Vue 3', done: true },
-  { id: 2, text: 'Learn TypeScript', done: false },
-  { id: 3, text: 'Learn Vite', done: false },
-])
+const filteredTaskList = computed(() => {
+  switch (filter.value) {
+    case 'completed':
+      return todos.value.filter((todo) => todo.done)
+    case 'todo':
+      return todos.value.filter((todo) => !todo.done)
+    default:
+      return todos.value
+  }
+})
+
+const filter = ref<FilterKey>('all')
+
+const updateFilterTask = (filterKey: FilterKey) => {
+  filter.value = filterKey
+}
+
+const todos = ref<ToDo[]>(JSON.parse(localStorage.getItem('todos') ?? '[]'))
 
 const addNewTask = (text: string) => {
   todos.value.push({ id: Date.now(), text, done: false })
@@ -46,4 +63,12 @@ const doneTask = (id: number) => {
     todo.done = !todo.done
   }
 }
+
+watch(
+  todos,
+  () => {
+    localStorage.setItem('todos', JSON.stringify(todos.value))
+  },
+  { deep: true },
+)
 </script>
